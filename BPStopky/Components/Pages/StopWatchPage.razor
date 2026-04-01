@@ -1,0 +1,17 @@
+﻿@using BPStopky.Models
+@inject StopWatchEngine StopWatchEngine
+
+@page "/"
+
+<h1>Stopky</h1>
+
+<div>
+    <h2>
+        @StopWatchEngine.Elapsed.ToString(@"hh\:mm\:ss\.ff")
+    </h2>
+</div>
+<div>
+    <button type="button" class="btn btn-success">Zapnout stopky</button>
+    <button type="button" class="btn btn-info">Pozastavit stopky</button>
+    <button type="button" class="btn btn-danger">Vypnout stopky</button>
+</div>
