@@ -2,17 +2,17 @@
 
 namespace BPStopky.Models
 {
-    internal class StopWatchEngine(IStopWatchService timerService)
+    internal class StopWatchEngine(IStopWatchService timerService, StopWatchStateService stopWatchStateService)
     {
-        public TimeOnly Elapsed { get; private set; }
-        public event Func<Task>? OnStateChangedAsync;
+        public event Func<Task>? OnElapsedChangedAsync;
 
+        public TimeSpan Elapsed { get; private set; } = TimeSpan.Zero;
         private int _timerIntervalMs = 10;
         private readonly System.Diagnostics.Stopwatch _realStopwatch = new();
 
         private Task StopWatchTickAsync()
         {
-            Elapsed = TimeOnly.FromTimeSpan(_realStopwatch.Elapsed);
+            Elapsed = _realStopwatch.Elapsed;
             NotifyStateChanged();
             return Task.CompletedTask;
         }
@@ -20,8 +20,9 @@ namespace BPStopky.Models
         public void StartTimer()
         {
             _realStopwatch.Start();
-
             _ = timerService?.Start(StopWatchTickAsync, _timerIntervalMs);
+            stopWatchStateService.SetRunning();
+
             NotifyStateChanged();
         }
 
@@ -29,6 +30,8 @@ namespace BPStopky.Models
         {
             _realStopwatch.Stop();
             timerService?.Stop();
+            stopWatchStateService.SetPaused();
+
             NotifyStateChanged();
         }
 
@@ -36,10 +39,12 @@ namespace BPStopky.Models
         {
             _realStopwatch.Reset(); // Vynuluje reálné měření
             timerService?.Stop();
-            Elapsed = TimeOnly.FromTimeSpan(TimeSpan.Zero);
+            Elapsed = TimeSpan.Zero;
+            stopWatchStateService.SetStopped();
+
             NotifyStateChanged();
         }
 
-        private void NotifyStateChanged() => _ = OnStateChangedAsync?.Invoke();
+        private void NotifyStateChanged() => _ = OnElapsedChangedAsync?.Invoke();
     }
 }

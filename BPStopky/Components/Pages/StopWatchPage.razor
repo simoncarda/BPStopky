@@ -1,17 +1,45 @@
 ﻿@using BPStopky.Models
+@using BPStopky.Services
 @inject StopWatchEngine StopWatchEngine
+@inject StopWatchStateService StopWatchStateService
 
 @page "/"
 
 <h1>Stopky</h1>
+<div>
+    <div>
+        <h2>
+            @StopWatchEngine.Elapsed.ToString(@"hh\:mm\:ss\.ff")
+        </h2>
+    </div>
+    <div>
+        @switch (StopWatchStateService.CurrentState) {
+            case StopWatchState.Running:
+                <button type="button" class="btn btn-danger" @onclick="StopWatchEngine.PauseTimer">Stop</button>
+                <button type="button" class="btn btn-info" @onclick="StopWatchEngine.SetRound">Kolo</button>
+                break;
+            case StopWatchState.Paused:
+                <button type="button" class="btn btn-success" @onclick="StopWatchEngine.StartTimer">Pokračovat</button>
+                <button type="button" class="btn btn-info" @onclick="StopWatchEngine.StopTimer">Obnovit</button>
+                break;
+            case StopWatchState.Stopped:
+                <button type="button" class="btn btn-success" @onclick="StopWatchEngine.StartTimer">Start</button>
+                <button type="button" class="btn btn-info" disabled>Kolo</button>
+                break;
+        }
+    </div>
+</div>
 
-<div>
-    <h2>
-        @StopWatchEngine.Elapsed.ToString(@"hh\:mm\:ss\.ff")
-    </h2>
-</div>
-<div>
-    <button type="button" class="btn btn-success">Zapnout stopky</button>
-    <button type="button" class="btn btn-info">Pozastavit stopky</button>
-    <button type="button" class="btn btn-danger">Vypnout stopky</button>
-</div>
+@code
+{
+    private Task RefreshUIAsync() => InvokeAsync(StateHasChanged);
+
+    protected override void OnInitialized()
+    {
+        StopWatchEngine.OnElapsedChangedAsync += RefreshUIAsync;
+    }
+    public void Dispose()
+    {
+        StopWatchEngine.OnElapsedChangedAsync -= RefreshUIAsync;
+    }
+}

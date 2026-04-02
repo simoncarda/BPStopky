@@ -22,6 +22,7 @@ namespace BPStopky
 
             builder.Services.AddScoped<Services.IStopWatchService, Services.StopWatchTimerService>();
             builder.Services.AddScoped<Models.StopWatchEngine>();
+            builder.Services.AddScoped<Services.StopWatchStateService>();
 
             return builder.Build();
         }
