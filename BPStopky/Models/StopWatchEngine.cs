@@ -45,6 +45,11 @@ namespace BPStopky.Models
             NotifyStateChanged();
         }
 
+        public void SetLap()
+        {
+
+        }
+
         private void NotifyStateChanged() => _ = OnElapsedChangedAsync?.Invoke();
     }
 }

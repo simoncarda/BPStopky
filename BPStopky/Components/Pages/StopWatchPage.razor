@@ -16,7 +16,7 @@
         @switch (StopWatchStateService.CurrentState) {
             case StopWatchState.Running:
                 <button type="button" class="btn btn-danger" @onclick="StopWatchEngine.PauseTimer">Stop</button>
-                <button type="button" class="btn btn-info" @onclick="StopWatchEngine.SetRound">Kolo</button>
+                <button type="button" class="btn btn-info" @onclick="StopWatchEngine.SetLap">Kolo</button>
                 break;
             case StopWatchState.Paused:
                 <button type="button" class="btn btn-success" @onclick="StopWatchEngine.StartTimer">Pokračovat</button>
