@@ -1,7 +1,6 @@
 ﻿using BPStopky.Services;
-using static Microsoft.Maui.ApplicationModel.Permissions;
 
-namespace BPStopky.Models
+namespace BPStopky.Models.Core
 {
     internal class StopWatchEngine(IStopWatchService timerService)
     {
