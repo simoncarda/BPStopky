@@ -1,32 +1,52 @@
 ﻿@using BPStopky.Models
 @using BPStopky.Services
 @inject StopWatchEngine StopWatchEngine
-@inject StopWatchStateService StopWatchStateService
 
 @page "/"
 
-<h1>Stopky</h1>
-<div>
+
+<div style="display:grid; place-items: center;">
+    <h1>Stopky</h1>
     <div>
         <h2>
             @StopWatchEngine.Elapsed.ToString(@"hh\:mm\:ss\.ff")
         </h2>
     </div>
     <div>
-        @switch (StopWatchStateService.CurrentState) {
+        @switch (StopWatchEngine.CurrentState) {
             case StopWatchState.Running:
                 <button type="button" class="btn btn-danger" @onclick="StopWatchEngine.PauseTimer">Stop</button>
                 <button type="button" class="btn btn-info" @onclick="StopWatchEngine.SetLap">Kolo</button>
                 break;
             case StopWatchState.Paused:
                 <button type="button" class="btn btn-success" @onclick="StopWatchEngine.StartTimer">Pokračovat</button>
-                <button type="button" class="btn btn-info" @onclick="StopWatchEngine.StopTimer">Obnovit</button>
+                <button type="button" class="btn btn-info" @onclick="StopWatchEngine.ResetTimer">Obnovit</button>
                 break;
             case StopWatchState.Stopped:
                 <button type="button" class="btn btn-success" @onclick="StopWatchEngine.StartTimer">Start</button>
                 <button type="button" class="btn btn-info" disabled>Kolo</button>
                 break;
         }
+    </div>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <td>Kolo</td>
+                    <td>Čas</td>
+                </tr>
+            </thead>
+                @{
+                    int count = 0;
+                }
+                @foreach (TimeSpan item in StopWatchEngine.Laps) {
+                    count++;
+                    <tr>
+                        <td>@count</td>
+                        <td>@item.ToString(@"hh\:mm\:ss\.ff")</td>
+                    </tr>
+                }
+        </table>
     </div>
 </div>
 
