@@ -99,17 +99,3 @@ h1:focus {
         padding-left: env(safe-area-inset-left);
     }
 }
-
-table {
-    text-align: center
-}
-
-th {
-    font-weight: bold;
-    padding: 12px 15px;
-    border-bottom: 2px solid #333;
-}
-td {
-    padding: 10px 15px;
-    border-bottom: 1px solid #ddd;
-}
