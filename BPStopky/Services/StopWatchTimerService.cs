@@ -2,11 +2,17 @@
 
 namespace BPStopky.Services
 {
+    /// <summary>
+    /// Služba, která využívá PeriodicTimer pro pravidelné spouštění akce.
+    /// </summary>
     internal partial class StopWatchTimerService : IStopWatchService
     {
         private PeriodicTimer? _timer;
         private CancellationTokenSource? _cts;
 
+        /// <summary>
+        /// Spustí periodický timer, který bude volat zadanou asynchronní akci každých intervalMs milisekund.
+        /// </summary>
         public async Task Start(Func<Task> onTickAsync, int intervalMs)
         {
             Stop();
@@ -33,6 +39,9 @@ namespace BPStopky.Services
                 cts.Dispose();
             }
         }
+        /// <summary>
+        /// Zastaví periodický timer a uvolní všechny prostředky. Po zavolání této metody již nebude volána žádná akce.
+        /// </summary>
         public void Stop()
         {
             _cts?.Cancel();
