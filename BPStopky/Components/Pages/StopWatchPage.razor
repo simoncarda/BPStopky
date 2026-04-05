@@ -55,10 +55,19 @@
 {
     private Task RefreshUIAsync() => InvokeAsync(StateHasChanged);
 
+    /// <summary>
+    /// Přihlášení se k události OnElapsedChangedAsync, která je vyvolána při změně uplynulého času. 
+    /// Tím zajistíme, že se uživatelské rozhraní aktualizuje pokaždé, když se změní čas na stopkách.
+    /// </summary>
     protected override void OnInitialized()
     {
         StopWatchEngine.OnElapsedChangedAsync += RefreshUIAsync;
     }
+
+    /// <summary>
+    /// Odhlášení se od události OnElapsedChangedAsync, aby 
+    ///  //nedocházelo k aktualizaci uživatelského rozhraní po zničení komponenty.
+    /// </summary>
     public void Dispose()
     {
         StopWatchEngine.OnElapsedChangedAsync -= RefreshUIAsync;
