@@ -9,7 +9,7 @@ namespace BPStopky.Models.Core
     /// </summary>
     internal class StopWatchEngine(IStopWatchService timerService)
     {
-        public event Func<Task>? OnElapsedChangedAsync;
+        public event Action? OnElapsedChanged;
 
         public TimeSpan Elapsed { get; private set; } = TimeSpan.Zero;
         private int _timerIntervalMs = 10;
@@ -36,6 +36,9 @@ namespace BPStopky.Models.Core
         /// </summary>
         public void StartTimer()
         {
+            if(CurrentState == StopWatchState.Running)
+                return;
+
             _realStopwatch.Start();
             _ = timerService?.Start(StopWatchTickAsync, _timerIntervalMs);
             CurrentState = StopWatchState.Running;
@@ -49,6 +52,9 @@ namespace BPStopky.Models.Core
         /// </summary>
         public void PauseTimer()
         {
+            if(CurrentState == StopWatchState.Paused)
+                return;
+
             _realStopwatch.Stop();
             timerService?.Stop();
             CurrentState = StopWatchState.Paused;
@@ -62,6 +68,9 @@ namespace BPStopky.Models.Core
         /// </summary>
         public void ResetTimer()
         {
+            if(CurrentState == StopWatchState.Stopped)
+                return;
+
             _realStopwatch.Reset();
             timerService?.Stop();
             Elapsed = TimeSpan.Zero;
@@ -77,12 +86,15 @@ namespace BPStopky.Models.Core
         /// </summary>
         public void SetLap()
         {
+            if(CurrentState != StopWatchState.Running)
+                return;
             Laps.Add(Elapsed);
+            NotifyStateChanged();
         }
 
         /// <summary>
         /// Notifikuje všechny posluchače, že se změnil uplynulý čas nebo stav.
         /// </summary>
-        private void NotifyStateChanged() => _ = OnElapsedChangedAsync?.Invoke();
+        private void NotifyStateChanged() => OnElapsedChanged?.Invoke();
     }
 }
