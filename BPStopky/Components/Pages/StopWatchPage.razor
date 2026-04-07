@@ -2,6 +2,7 @@
 @using BPStopky.Models.Core
 @using BPStopky.Services
 @inject StopWatchEngine StopWatchEngine
+@implements IDisposable
 
 @page "/"
 
@@ -33,27 +34,27 @@
         <table>
             <thead>
                 <tr>
-                    <td>Kolo</td>
-                    <td>Čas</td>
+                    <th>Kolo</th>
+                    <th>Čas</th>
                 </tr>
             </thead>
-                @{
-                    int count = 0;
-                }
-                @foreach (TimeSpan item in StopWatchEngine.Laps) {
-                    count++;
-                    <tr>
-                        <td>@count</td>
-                        <td>@item.ToString(@"hh\:mm\:ss\.ff")</td>
-                    </tr>
-                }
+                <tbody>
+                    @for (int i = 0; i < StopWatchEngine.Laps.Count; i++) {
+                        <tr>
+                            <td>@i</td>
+                            <td>
+                                @StopWatchEngine.Laps[i].ToString(@"hh\:mm\:ss\.ff")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
         </table>
     </div>
 </div>
 
 @code
 {
-    private Task RefreshUIAsync() => InvokeAsync(StateHasChanged);
+    private void RefreshUIAsync() => InvokeAsync(StateHasChanged);
 
     /// <summary>
     /// Přihlášení se k události OnElapsedChangedAsync, která je vyvolána při změně uplynulého času. 
@@ -61,7 +62,7 @@
     /// </summary>
     protected override void OnInitialized()
     {
-        StopWatchEngine.OnElapsedChangedAsync += RefreshUIAsync;
+        StopWatchEngine.OnElapsedChanged += RefreshUIAsync;
     }
 
     /// <summary>
@@ -70,6 +71,6 @@
     /// </summary>
     public void Dispose()
     {
-        StopWatchEngine.OnElapsedChangedAsync -= RefreshUIAsync;
+        StopWatchEngine.OnElapsedChanged -= RefreshUIAsync;
     }
 }
