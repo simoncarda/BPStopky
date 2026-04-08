@@ -7,7 +7,7 @@ namespace BPStopky.Models.Core
     /// Je nezávislá na konkrétní implementaci časovače, což umožňuje 
     /// snadné testování a případné změny v budoucnu.
     /// </summary>
-    internal class StopWatchEngine(IStopWatchService timerService)
+    internal class StopWatchEngine(IStopWatchTimerService timerService)
     {
         public event Action? OnElapsedChanged;
 

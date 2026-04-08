@@ -20,7 +20,7 @@ namespace BPStopky
     		builder.Logging.AddDebug();
 #endif
 
-            builder.Services.AddScoped<Services.IStopWatchService, Services.StopWatchTimerService>();
+            builder.Services.AddScoped<Services.IStopWatchTimerService, Services.StopWatchTimerService>();
             builder.Services.AddScoped<Models.Core.StopWatchEngine>();
 
             return builder.Build();

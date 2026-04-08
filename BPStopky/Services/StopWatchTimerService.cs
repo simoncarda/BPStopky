@@ -5,7 +5,7 @@ namespace BPStopky.Services
     /// <summary>
     /// Služba, která využívá PeriodicTimer pro pravidelné spouštění akce.
     /// </summary>
-    internal partial class StopWatchTimerService : IStopWatchService
+    internal partial class StopWatchTimerService : IStopWatchTimerService
     {
         private PeriodicTimer? _timer;
         private CancellationTokenSource? _cts;
